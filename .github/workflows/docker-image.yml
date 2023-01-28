@@ -18,24 +18,35 @@ jobs:
       with:
         fetch-depth: 0
         
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3
+      with:
+        major_pattern: "mayor:"
+        minor_pattern: "feat:"
+        format: "${mayor}.${minor}.${patch}-prerelease${increment}"
+      id: version
+        
     - name: Docker Login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        NEW_VERSION: ${{steps.version.outputs.version}}
       run: |
         echo "Iniciando login en Docker"
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         echo "Login en Docker finalizado"
+        echo "Version: $NEW_VERSION"
         
-    - name: Build Docker Image   
-      run: |
-        docker build -t larturi/docker-github-ci-graphql:0.0.2 .
-        docker build -t larturi/docker-github-ci-graphql:latest .
+#     - name: Build Docker Image   
+#       run: |
+#         docker build -t larturi/docker-github-ci-graphql:0.0.2 .
+#         docker build -t larturi/docker-github-ci-graphql:latest .
      
-    - name: Push Docker Image   
-      run: |
-        docker push larturi/docker-github-ci-graphql:0.0.2
-        docker push larturi/docker-github-ci-graphql:latest
+#     - name: Push Docker Image   
+#       run: |
+#         docker push larturi/docker-github-ci-graphql:0.0.2
+#         docker push larturi/docker-github-ci-graphql:latest
+
       
 #     - name: Build the Docker image
 #       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
