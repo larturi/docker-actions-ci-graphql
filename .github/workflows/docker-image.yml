@@ -33,7 +33,7 @@ jobs:
      
     - name: Push Docker Image   
       run: |
-        docker push larturi/docker-github-ci-graphql:0.0.2 .
+        docker push larturi/docker-github-ci-graphql:0.0.2
 
       
 #     - name: Build the Docker image
